@@ -1,0 +1,15 @@
+created:
+    - database/factories/FflFactory.php
+    - database/factories/CustomerFactory.php
+    - database/factories/DealerFactory.php
+    - database/migrations/2025_02_05_195749_create_ffls_table.php
+    - database/migrations/2025_02_05_195750_create_customers_table.php
+    - database/migrations/2025_02_05_195751_create_dealers_table.php
+    - app/Models/Ffl.php
+    - app/Models/Customer.php
+    - app/Models/Dealer.php
+models:
+    User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
+    Ffl: { license_no: string, license_name: string, license_type: string, expire_date: date, business_name: string, address1: string, address2: 'string nullable', city: string, state: string, zip_code: string, county: string, bus_email: 'string nullable', bus_phone: 'string nullable', fax: 'string nullable', email: 'string nullable', store_hours: 'string nullable', directions: 'text nullable', dealer_id: 'unsignedInteger nullable', relationships: { belongsTo: Dealer } }
+    Customer: { name: string, address1: string, address2: 'string nullable', city: string, state: string, phone: string, zip_code: string, dealer_id: 'unsignedInteger nullable', relationships: { belongsTo: Dealer } }
+    Dealer: { name: string, address1: string, address2: 'string nullable', city: string, state: string, phone: string, zip_code: string, discount: string, terms: 'text nullable', ship_via: 'string nullable', ups_zone: 'string nullable', credit_limit: 'string nullable', credit_hold_flag: 'string nullable', ffl_id: 'unsignedInteger nullable', relationships: { hasOne: Ffl, hasMany: Customer } }
