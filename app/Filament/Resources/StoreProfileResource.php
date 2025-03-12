@@ -165,4 +165,9 @@ class StoreProfileResource extends Resource
             'edit' => Pages\EditStoreProfile::route('/{record}/edit'),
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false; // Prevents the resource from appearing in the sidebar
+    }
 }

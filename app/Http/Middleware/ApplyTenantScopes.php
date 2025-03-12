@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Customer;
 use App\Models\Ffl;
+use App\Models\MyFavorites;
 use App\Models\StoreProfile;
 use Closure;
 use Filament\Facades\Filament;
@@ -32,6 +33,10 @@ class ApplyTenantScopes
         );
 
         StoreProfile::addGlobalScope(
+            fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
+        );
+
+        MyFavorites::addGlobalScope(
             fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
         );
 
