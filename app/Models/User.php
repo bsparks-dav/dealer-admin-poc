@@ -13,13 +13,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
-class User extends Authenticatable implements FilamentUser, HasTenants, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenants
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
 
     protected $fillable = [
         'name',
@@ -32,7 +31,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         'remember_token',
     ];
 
-
     protected function casts(): array
     {
         return [
@@ -44,16 +42,17 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
     public function getFilamentAvatarUrl(): ?string
     {
         return asset('images/b-biggums.jpg') ?? null;
-        //return null;
+        // return null;
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        //return $this->is_admin == 1;
-        //dd($this->hasVerifiedEmail());
-        //return str_ends_with($this->email, '@davidsonsinc.com') && $this->hasVerifiedEmail();
-        return str_ends_with($this->email, '@davidsonsinc.com');
-        //return true;
+        // $users = DB::connection('sqlsrv')->select('SELECT TOP 10 company_name FROM Davidsons.dbo.SOT_Dealers');
+        // return $this->is_admin == 1;
+        // dd($this->hasVerifiedEmail());
+        // dd($users);
+        // return str_ends_with($this->email, '@davidsonsinc.com');
+        return true;
     }
 
     public function dealers(): BelongsToMany

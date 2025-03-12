@@ -50,6 +50,7 @@ class Dealer extends Model implements HasAvatar, HasName, HasCurrentTenantLabel
         'state' => USState::class,
     ];
 
+
     public function getFilamentAvatarUrl(): ?string
     {
         return null;

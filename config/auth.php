@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'dav_admin_guard' => [
+            'driver' => 'soap',
+            'provider' => 'dav_admin_users',
+        ],
     ],
 
     /*
@@ -64,11 +68,11 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+        'dav_admin_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Filament\Auth\SoapLogin::class,
+        ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

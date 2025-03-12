@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\USState;
 use App\Filament\Resources\FflResource\Pages;
-use App\Filament\Resources\FflResource\RelationManagers;
 use App\Models\Ffl;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -19,10 +17,7 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
-
 
 class FflResource extends Resource
 {
@@ -31,10 +26,8 @@ class FflResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $modelLabel = 'FFL';
+
     protected static ?string $pluralModelLabel = 'FFL';
-
-    //protected static ?string $recordTitleAttribute = 'license_name';
-
 
     public static function form(Form $form): Form
     {
@@ -102,8 +95,8 @@ class FflResource extends Resource
                     ->searchable(),
                 TextColumn::make('license_name')
                     ->searchable(),
-                //Tables\Columns\TextColumn::make('license_type')
-                    //->searchable(),
+                // Tables\Columns\TextColumn::make('license_type')
+                // ->searchable(),
                 TextColumn::make('expire_date')
                     ->date(),
                 TextColumn::make('business_name')
@@ -156,13 +149,13 @@ class FflResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                //Tables\Actions\BulkActionGroup::make([
-                    //Tables\Actions\DeleteBulkAction::make(),
-                //]),
+                // Tables\Actions\BulkActionGroup::make([
+                // Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 
@@ -201,7 +194,7 @@ class FflResource extends Resource
                             ->label('Dealer Name')
                             ->weight(FontWeight::Bold)
                             ->color('gray'),
-                    ])
+                    ]),
             ]);
     }
 
@@ -225,5 +218,10 @@ class FflResource extends Resource
             'edit' => Pages\EditFfl::route('/{record}/edit'),
             'view' => Pages\ViewFfl::route('/{record}'),
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false; // Prevents the resource from appearing in the sidebar
     }
 }

@@ -1,0 +1,8 @@
+services:
+  laravel.test:
+    build:
+      context: ./docker/8.3   # Path to your Dockerfile
+      dockerfile: Dockerfile
+  mariadb:
+    volumes:
+      - ./mysql/mariadb.cnf:/etc/mysql/conf.d/custom.cnf
