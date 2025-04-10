@@ -13,9 +13,11 @@ enum USState: string implements HasLabel
     case CA = 'CA';
     case CO = 'CO';
     case CT = 'CT';
+    case DC = 'DC';
     case DE = 'DE';
     case FL = 'FL';
     case GA = 'GA';
+    case GU = 'GU';
     case HI = 'HI';
     case ID = 'ID';
     case IL = 'IL';
@@ -44,12 +46,14 @@ enum USState: string implements HasLabel
     case OK = 'OK';
     case OR = 'OR';
     case PA = 'PA';
+    case PR = 'PR';
     case RI = 'RI';
     case SC = 'SC';
     case SD = 'SD';
     case TN = 'TN';
     case TX = 'TX';
     case UT = 'UT';
+    case VI = 'VI';
     case VT = 'VT';
     case VA = 'VA';
     case WA = 'WA';
@@ -57,7 +61,8 @@ enum USState: string implements HasLabel
     case WI = 'WI';
     case WY = 'WY';
 
-    public function getLabel(): ?string {
+    public function getLabel(): ?string
+    {
         return match ($this) {
             self::AL => 'Alabama',
             self::AK => 'Alaska',
@@ -66,9 +71,11 @@ enum USState: string implements HasLabel
             self::CA => 'California',
             self::CO => 'Colorado',
             self::CT => 'Connecticut',
+            self::DC => 'District of Columbia',
             self::DE => 'Delaware',
             self::FL => 'Florida',
             self::GA => 'Georgia',
+            self::GU => 'Guam',
             self::HI => 'Hawaii',
             self::ID => 'Idaho',
             self::IL => 'Illinois',
@@ -97,6 +104,7 @@ enum USState: string implements HasLabel
             self::OK => 'Oklahoma',
             self::OR => 'Oregon',
             self::PA => 'Pennsylvania',
+            self::PR => 'Puerto Rico',
             self::RI => 'Rhode Island',
             self::SC => 'South Carolina',
             self::SD => 'South Dakota',
@@ -104,6 +112,7 @@ enum USState: string implements HasLabel
             self::TX => 'Texas',
             self::UT => 'Utah',
             self::VT => 'Vermont',
+            self::VI => 'Virgin Islands',
             self::VA => 'Virginia',
             self::WA => 'Washington',
             self::WV => 'West Virginia',
@@ -111,4 +120,18 @@ enum USState: string implements HasLabel
             self::WY => 'Wyoming'
         };
     }
+
+    public static function formatStateCode(?string $stateCode): string
+    {
+        if (empty($stateCode)) {
+            return '';
+        }
+
+        try {
+            return self::from($stateCode)->getLabel();
+        } catch (\ValueError $e) {
+            return $stateCode;
+        }
+    }
+
 }

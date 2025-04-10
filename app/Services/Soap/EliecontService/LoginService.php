@@ -2,41 +2,27 @@
 
 namespace App\Services\Soap\EliecontService;
 
+use App\Services\Soap\SoapService;
 use SoapClient;
 use SoapFault;
 
 class LoginService
 {
+    protected SoapService $soapService;
+
     protected SoapClient $client;
 
-    protected string $service = '/eliecontservice';
 
     /**
      * @throws SoapFault
      */
     public function __construct()
     {
-        $env = app()->environment();
+        $this->soapService = new SoapService('/eliecontservice');
 
-        if ($env == 'production') {
-            $wsdl = config('soap.soap_urls.production').$this->service.'.asmx?wsdl';
-        } else {
-            $wsdl = config('soap.soap_urls.local').$this->service.'.asmx?wsdl';
-        }
+        $wsdl = $this->soapService->getWsdl();
 
-        $options = [
-            'cache_wsdl' => WSDL_CACHE_NONE,
-            'trace' => true,
-            'exceptions' => true,
-            'soap_version' => SOAP_1_2,
-            'stream_context' => stream_context_create([
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true,
-                ],
-            ]),
-        ];
+        $options = $this->soapService->getSoapOptions();
 
         $this->client = new SoapClient($wsdl, $options);
     }

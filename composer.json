@@ -7,14 +7,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-curl": "*",
         "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-soap": "*",
+        "calebporzio/sushi": "^2.5",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "php-soap/ext-soap-engine": "^1.7",
-        "ext-soap": "*",
-        "ext-curl": "*",
-        "ext-simplexml": "*",
         "pxlrbt/filament-environment-indicator": "^2.1",
         "spatie/laravel-login-link": "^1.6"
     },

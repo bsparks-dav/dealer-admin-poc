@@ -1,9 +1,9 @@
 <x-filament-panels::page>
-    <h2 class="text-center text-primary-600 dark:text-primary-400 text-lg font-medium">
+    <h2 style="color: #008b8b;" class="text-center text-lg font-medium">
         Welcome to Davidson's Online. By using Davidson's Online you agree to the Terms and Conditions of Sale set forth below. Please read them carefully.
     </h2>
     <h3 class="text-center text-danger-600 dark:text-danger-500">TERMS AND CONDITIONS OF SALE</h3>
-    <div class="bg-gray-200 p-6 rounded-lg shadow-md dark:bg-gray-800">
+    <div style="border: thin solid #008b8b;" class="bg-gray-200 p-6 rounded-lg shadow-md dark:bg-gray-800">
         <p class="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed">
             Davidson's, Inc. is referred to in these Terms and Conditions of Sale (these <span class="font-bold">"Terms"</span>) as <span class="font-bold">"Davidson's"</span> and the person or entity purchasing goods or
             services (collectively referred to as <span class="font-bold">"Goods"</span>) from Davidson's is referred to as <span class="font-bold">"Dealer."</span> Dealer acknowledges that these Terms, along
@@ -247,6 +247,7 @@
         </div>
         <p class="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed">Revised: April 1, 2022</p>
     </div>
+    <br><br>
     <style>
         ol[type='a'] {
             list-style-type: lower-alpha;

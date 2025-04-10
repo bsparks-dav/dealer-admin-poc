@@ -3,18 +3,25 @@
 namespace App\Filament\Auth;
 
 use App\Models\User;
+use App\Services\Api\CustomerService;
 use App\Services\Soap\EliecontService\LoginService;
+use App\Services\Soap\InvoiceService\InvoiceInquiry;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\Login;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class SoapLogin extends Login
 {
+    protected string $email = '';
+
+    protected string $password = '';
+
     public function authenticate(): ?LoginResponse
     {
         try {
@@ -27,6 +34,8 @@ class SoapLogin extends Login
 
         $data = $this->form->getState();
 
+        session(['soap_login' => $data]);
+
         $loginService = app(LoginService::class);
 
         $response = $loginService->loginRequest($data['email'], $data['password']);
@@ -34,6 +43,22 @@ class SoapLogin extends Login
         if (Str::isJson($response)) {
 
             $result = json_decode($response, true);
+
+            if ($result['ReturnCode'] == 5) {
+
+                // "This email address is invalid"
+                throw ValidationException::withMessages([
+                    'data.email' => __('filament-panels::pages/auth/login.messages.email'),
+                ]);
+            }
+
+            if ($result['ReturnCode'] == 33) {
+                // $returnMsg = preg_replace('/\d+\^\d+\^/', '', $result['ReturnMsg']);
+                // "Your password is invalid."
+                throw ValidationException::withMessages([
+                    'data.password' => __('filament-panels::pages/auth/login.messages.password'),
+                ]);
+            }
 
             if ($result['ReturnCode'] == 0 || $result['ReturnCode'] == 26) {
 
@@ -52,73 +77,58 @@ class SoapLogin extends Login
 
                 $id = $result['SYCONTCT_ID'];
 
-                if ($id != 0) {
+                $CustomerService = app(CustomerService::class);
+                // $result = $CustomerService->getTermsCodes();
 
-                    $user = User::where('id', $id)->first();
+                $cust_no = $result['ContactRelationshipRecord']['ContactRelationshipRecord'][0]['SYCONREL_REF_ID'];
 
-                    if (! Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
-                        $this->throwFailureValidationException();
+                session(['soap_cust_no' => $cust_no]);
 
-                    } else {
-                        // authenticated user...
-                        $user = Filament::auth()->user();
+                // so i can use globally...
+                $CustomerService->setCustomerNumber($cust_no);
 
-                        if (
-                            ($user instanceof FilamentUser) &&
-                            (! $user->canAccessPanel(Filament::getCurrentPanel()))
-                        ) {
-                            Filament::auth()->logout();
+                $dealer_data = $CustomerService->getCustomer($cust_no);
+                // dd($dealer_data['Customer']);
+                $dealer_name = $dealer_data['Customer']['CUS_NAME'];
 
-                            $this->throwFailureValidationException();
-                        }
+                // create a user locally for session handling...
+                $user = User::firstOrCreate(
+                    ['email' => $data['email']],
+                    [
+                        'name' => $dealer_name ?? $dealer_data['Customer']['CUS_NAME'],
+                        'password' => bcrypt(Str::random(64)),  // placeholder since local DB password not used...
+                    ]
+                );
 
-                        session()->regenerate();
+                // cannot use this for external API or SOAP data...
+                // if (! Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
+                //    $this->throwFailureValidationException();
+                // }
 
-                        return app(LoginResponse::class);
-                    }
+                Filament::auth()->login($user, $data['remember'] ?? false);
 
-                } else {
-                    $this->displayNotification('We are unable to process your request. Please try again.');
+                if (
+                    ($user instanceof FilamentUser) &&
+                    (! $user->canAccessPanel(Filament::getCurrentPanel()))
+                ) {
+                    Filament::auth()->logout();
+
+                    $this->throwFailureValidationException();
                 }
-            } else {
 
-                if ($result['ReturnCode'] == 5) {
+                session()->regenerate();
 
-                    // "This email address is invalid."
-                    throw ValidationException::withMessages([
-                        'data.email' => __('filament-panels::pages/auth/login.messages.email'),
-                    ]);
-                }
+                return app(LoginResponse::class);
 
-                if ($result['ReturnCode'] == 33) {
-                    // $returnMsg = preg_replace('/\d+\^\d+\^/', '', $result['ReturnMsg']);
-                    // "Your password is invalid."
-                    throw ValidationException::withMessages([
-                        'data.password' => __('filament-panels::pages/auth/login.messages.password'),
-                    ]);
-                }
             }
         } else {
             $this->displayPersistentNotification('We are unable to process your request. Please try again.');
 
-            // probably need to log the response, etc...
+            // may need to log the response here...
             return null;
         }
 
-        $user = Filament::auth()->user();
-
-        if (
-            ($user instanceof FilamentUser) &&
-            (! $user->canAccessPanel(Filament::getCurrentPanel()))
-        ) {
-            Filament::auth()->logout();
-
-            $this->throwFailureValidationException();
-        }
-
-        session()->regenerate();
-
-        return app(LoginResponse::class);
+        return null;
     }
 
     protected function displayNotification(string $message): void

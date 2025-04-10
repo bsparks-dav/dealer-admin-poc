@@ -1,6 +1,5 @@
 <x-filament-panels::page>
     <div class="space-y-6">
-{{--        <div class="rounded-lg p-4" style="border:thin solid #008b8b;">{{$page_stuff}}</div>--}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 rounded-lg shadow-md">
             @foreach ($this->recalls as $recall)
             <!-- Row 2, Column 1 -->
@@ -10,10 +9,10 @@
                     {{ $recall['name'] }}
                 </div>
 
-                <div class="pt-4 w-1/2 mx-auto">
+                <div class="pt-4 w-1/2 mx-auto flex justify-center">
                     <x-filament::button
                         color="darkcyan"
-                        class="w-full"
+                        class="w-72"
                         href="{{ $recall['link'] }}"
                         tag="a"
                         target="_blank"
@@ -25,5 +24,6 @@
             </div>
             @endforeach
         </div>
+        <br><br>
     </div>
 </x-filament-panels::page>
