@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
-use App\Enums\LicenseType;
 use App\Enums\USState;
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasCurrentTenantLabel;
 use Filament\Models\Contracts\HasName;
+use Filament\Panel;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Storage;
+// use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Dealer extends Model implements HasAvatar, HasName, HasCurrentTenantLabel
+class Dealer extends Model implements FilamentUser, HasAvatar, HasCurrentTenantLabel, HasName
 {
     use HasFactory;
 
@@ -50,6 +52,10 @@ class Dealer extends Model implements HasAvatar, HasName, HasCurrentTenantLabel
         'state' => USState::class,
     ];
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
 
     public function getFilamentAvatarUrl(): ?string
     {
@@ -75,5 +81,4 @@ class Dealer extends Model implements HasAvatar, HasName, HasCurrentTenantLabel
     {
         return $this->name;
     }
-
 }

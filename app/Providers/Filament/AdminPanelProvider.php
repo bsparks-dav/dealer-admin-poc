@@ -15,6 +15,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentView;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -34,6 +35,8 @@ class AdminPanelProvider extends PanelProvider
 
         return $panel
             ->spa()
+            // ->maxContentWidth('80%')
+            ->maxContentWidth(MaxWidth::Full)
             // ->topNavigation()
             ->favicon(asset('../images/favicon.ico'))
             ->brandName(" Davidson's Inc.")
@@ -41,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn () => view('vendor.filament.components.logo2'))
             ->tenantMenu(false)
             ->default()
-            ->tenant(Dealer::class)
+            // ->tenant(Dealer::class)
             // ->tenantProfile(EditDealerProfile::class)
             ->tenantRoutePrefix('dealer')
             ->id('admin')
@@ -59,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
+                // \App\Filament\Clusters\MyInvoices\Pages\InvoiceHeaders::class,
             ])
 
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')

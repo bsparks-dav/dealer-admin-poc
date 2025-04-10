@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Filament\Actions\AuthenticateLogin;
-use App\Services\Soap\EliecontService\LoginService;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(\App\Services\Soap\SoapService::class, function () {
+            return new \App\Services\Soap\SoapService;
+        });
+
     }
 
     /**
@@ -23,7 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // \Illuminate\Pagination\Paginator::defaultView('pagination::tailwind');
+        // \Illuminate\Pagination\Paginator::defaultSimpleView('pagination::simple-tailwind');
+
+
         FilamentColor::register([
+            'teal' => Color::hex('#90e4c1'), // 008080
             'darkteal' => Color::hex('#236863'),
             'darkgreen' => Color::hex('#006400'),
             'darkred' => Color::hex('#8B0000'),
@@ -44,5 +50,4 @@ class AppServiceProvider extends ServiceProvider
             'darkturquoise' => Color::hex('#00CED1'),
         ]);
     }
-
 }

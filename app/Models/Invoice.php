@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Invoice extends Model
 {
+    protected $guarded = [];
+
     public function dealer(): BelongsTo
     {
         return $this->belongsTo(Dealer::class);
     }
+
 }

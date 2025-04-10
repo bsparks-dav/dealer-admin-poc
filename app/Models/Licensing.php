@@ -12,19 +12,4 @@ class Licensing extends Model
         return $this->belongsTo(Dealer::class);
     }
 
-    public static function getManufacturerRecalls(): array
-    {
-        return [
-            [
-                'name' => 'Barnes 45 Colt Product Recall Notice',
-                'link' => '/media/customer_documents/mfgrecall/Barnes.pdf',
-            ],
-            [
-                'name' => 'Beretta Neo Pistols Safety Recall',
-                'link' => '/media/customer_documents/mfgrecall/beretta_neos.pdf',
-            ],
-            // Add more recalls as needed
-        ];
-    }
-
 }

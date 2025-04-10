@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'dealer' => [
+            'driver' => 'session',
+            'provider' => 'dealers',
+        ],
         'dav_admin_guard' => [
             'driver' => 'soap',
             'provider' => 'dav_admin_users',
@@ -67,6 +71,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        'dealers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Dealer::class,
         ],
         'dav_admin_users' => [
             'driver' => 'eloquent',
