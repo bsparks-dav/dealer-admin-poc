@@ -38,12 +38,12 @@ enum StatusCode: string implements HasColor, HasIcon, HasLabel
     {
         if (empty($statusCode)) {
             return '';
-        }
-
-        try {
-            return self::from($statusCode)->getLabel();
-        } catch (\ValueError $e) {
-            return $statusCode;
+        } else {
+            try {
+                return self::from($statusCode)->getLabel();
+            } catch (\ValueError $e) {
+                return $statusCode;
+            }
         }
     }
 
@@ -53,20 +53,20 @@ enum StatusCode: string implements HasColor, HasIcon, HasLabel
             self::IN_PROGRESS => 'warning',
             self::INCOMPLETE => 'danger',
             self::INVOICED => 'info',
-            self::SHIPPED => 'teal',
+            self::SHIPPED => 'success',
         };
     }
 
-    public static function getColorForCode(?string $code): string
+    public static function getColorForCode(?string $code): string|array
     {
         if (empty($code)) {
             return 'primary';
-        }
-
-        try {
-            return self::from($code)->getColor();
-        } catch (\ValueError $e) {
-            return 'primary';
+        } else {
+            try {
+                return self::from($code)->getColor();
+            } catch (\ValueError $e) {
+                return 'primary';
+            }
         }
     }
 }

@@ -7,7 +7,6 @@ return [
         'user' => App\Filament\Auth\SoapLogin::class,
     ],
 
-
     /*
     |--------------------------------------------------------------------------
     | Broadcasting

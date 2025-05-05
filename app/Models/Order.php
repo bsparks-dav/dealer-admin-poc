@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MyOrder extends Model
+class Order extends Model
 {
     protected $guarded = [];
 
@@ -13,4 +13,5 @@ class MyOrder extends Model
     {
         return $this->belongsTo(Dealer::class);
     }
+
 }

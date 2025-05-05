@@ -16,7 +16,8 @@ enum LicenseType: string implements HasLabel
     case TYPE_10 = 'TYPE_10';
     case TYPE_11 = 'TYPE_11';
 
-    public function getLabel(): ?string {
+    public function getLabel(): ?string
+    {
         return match ($this) {
             self::TYPE_01 => 'Type 01 - Dealer in Firearms Other Than Destructive Devices',
             self::TYPE_02 => 'Type 02 - Pawnbroker in Firearms Other Than Destructive Devices',

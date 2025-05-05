@@ -1,15 +1,26 @@
 created:
-    - database/factories/FflFactory.php
-    - database/factories/CustomerFactory.php
-    - database/factories/DealerFactory.php
-    - database/migrations/2025_02_05_195749_create_ffls_table.php
-    - database/migrations/2025_02_05_195750_create_customers_table.php
-    - database/migrations/2025_02_05_195751_create_dealers_table.php
-    - app/Models/Ffl.php
-    - app/Models/Customer.php
-    - app/Models/Dealer.php
+    - database/factories/InvoiceHeaderFactory.php
+    - database/factories/InvoiceBillToFactory.php
+    - database/factories/InvoiceShipToFactory.php
+    - database/factories/InvoiceSalesPersonFactory.php
+    - database/factories/InvoiceTaxFactory.php
+    - database/migrations/2025_04_30_124107_create_invoice_headers_table.php
+    - database/migrations/2025_04_30_124108_create_invoice_bill_tos_table.php
+    - database/migrations/2025_04_30_124109_create_invoice_ship_tos_table.php
+    - database/migrations/2025_04_30_124110_create_invoice_sales_people_table.php
+    - database/migrations/2025_04_30_124111_create_invoice_taxes_table.php
+    - app/Models/InvoiceHeader.php
+    - app/Models/InvoiceBillTo.php
+    - app/Models/InvoiceShipTo.php
+    - app/Models/InvoiceSalesPerson.php
+    - app/Models/InvoiceTax.php
 models:
     User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
     Ffl: { license_no: string, license_name: string, license_type: string, expire_date: date, business_name: string, address1: string, address2: 'string nullable', city: string, state: string, zip_code: string, county: string, bus_email: 'string nullable', bus_phone: 'string nullable', fax: 'string nullable', email: 'string nullable', store_hours: 'string nullable', directions: 'text nullable', dealer_id: 'unsignedInteger nullable', relationships: { belongsTo: Dealer } }
     Customer: { name: string, address1: string, address2: 'string nullable', city: string, state: string, phone: string, zip_code: string, dealer_id: 'unsignedInteger nullable', relationships: { belongsTo: Dealer } }
     Dealer: { name: string, address1: string, address2: 'string nullable', city: string, state: string, phone: string, zip_code: string, discount: string, terms: 'text nullable', ship_via: 'string nullable', ups_zone: 'string nullable', credit_limit: 'string nullable', credit_hold_flag: 'string nullable', ffl_id: 'unsignedInteger nullable', relationships: { hasOne: Ffl, hasMany: Customer } }
+    InvoiceHeader: { inv_no: string, inv_order_no: string, inv_customer_no: string, inv_date: date, inv_date_entered: date, inv_order_date: date, inv_type: string, inv_apply_to_no: string, inv_purchase_ord_no: string, inv_no_alt: string, inv_cust_bal_method: string, inv_terms_code: string, inv_frt_pay_code: string, inv_discount_percent: decimal, inv_job_no: string, inv_mfg_location: string, inv_profit_center: string, inv_department: string, inv_ar_reference: string, inv_tot_sale_amt: decimal, inv_tot_cost: decimal, inv_tot_weight: decimal, inv_misc_chg_amt: decimal, inv_misc_chg_acct_no: string, inv_frt_amt: decimal, inv_frt_acct_no: string, inv_comm_percent: decimal, inv_comm_amount: decimal, inv_comment1: string, inv_comment2: string, inv_comment3: string, inv_payment_amt: decimal, inv_payment_disc_amt: decimal, inv_check_no: string, inv_check_date: date, inv_cash_acct_no: string, inv_date_picked: date, inv_date_billed: date, inv_selection_code: string, inv_posted_date: date, inv_part_posted_flag: string, inv_copy_to_bm_fg: string, inv_edi_fg: string, inv_edi_po_no_cont: string, inv_edi_exp_flg: string, inv_closed_fg: string, inv_acc_misc_chg_amt: decimal, inv_acc_frt_amt: decimal, inv_acc_tot_sale_amt: decimal, inv_store_no: string, inv_rma_status: string, inv_phatm_inv_flag: string, inv_dept_no: string, inv_bol_no: string, inv_bol_printed: string, inv_ref_doc_no: string, inv_payment_tp: string, inv_full_pay_date: date, inv_po_req_gen_flg: string, customer_id: 'unsignedInteger nullable', relationships: { belongsTo: Customer } }
+    InvoiceBillTo: { inv_bill_to_no: string, inv_bill_to_name: string, inv_bill_to_addr_1: string, inv_bill_to_addr_2: string, inv_bill_to_city: string, inv_bill_to_st: string, inv_bill_to_zipcd: string, inv_bill_to_country: string, bill_to_filler1: string, bill_to_filler2: string, inv_bill_to_fr_fo_fg: string, customer_id: 'unsignedInteger nullable', relationships: { belongsTo: Customer } }
+    InvoiceShipTo: { inv_ship_to_no: string, inv_ship_to_name: string, inv_ship_to_addr_1: string, inv_ship_to_addr_2: string, inv_ship_to_city: string, inv_ship_to_st: string, inv_ship_to_zipcd: string, inv_ship_to_country: string, ship_to_filler1: string, ship_to_filler2: string, inv_shipping_date: date, inv_ship_via_code: string, inv_ship_instruct1: string, inv_ship_instruct2: string, inv_ship_to_fr_fo_fg: string, customer_id: 'unsignedInteger nullable', relationships: { belongsTo: Customer } }
+    InvoiceSalesPerson: { inv_salesman_no1: string, inv_salesman_pct_co1: decimal, inv_salesman_com_am1: decimal, inv_salesman_no2: string, inv_salesman_pct_co2: decimal, inv_salesman_com_am2: decimal, inv_salesman_no3: string, inv_salesman_pct_co3: decimal, inv_salesman_com_am3: decimal, customer_id: 'unsignedInteger nullable', relationships: { belongsTo: Customer } }
+    InvoiceTax: { inv_tax_code_1: string, inv_tax_code_2: string, inv_tax_code_3: string, inv_tax_percent_1: string, inv_tax_percent_2: string, inv_tax_percent_3: string, inv_sales_tax_amt_1: decimal, inv_sales_tax_amt_2: decimal, inv_sales_tax_amt_3: decimal, inv_tot_tax_amt: decimal, inv_acc_tot_tax_amt: decimal, inv_acc_sale_tax_amt: decimal, customer_id: 'unsignedInteger nullable', relationships: { belongsTo: Customer } }
