@@ -30,6 +30,15 @@ $env = 'production';
         return "{$baseUrl}{$this->service}.asmx?wsdl";
     }
 
+    public function parseXml($element): array
+    {
+        $responseXml = simplexml_load_string($element);
+
+        $responseXml->registerXPathNamespace('d', 'urn:schemas-microsoft-com:xml-diffgram-v1');
+
+        return $responseXml->xpath('//NewDataSet');
+    }
+
     public function getSoapOptions(): array
     {
         return [

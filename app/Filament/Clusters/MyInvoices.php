@@ -3,7 +3,9 @@
 namespace App\Filament\Clusters;
 
 use App\Enums\USState;
+use App\Models\SoapInvoice;
 use Filament\Clusters\Cluster;
+use Filament\Support\Colors\Color;
 
 class MyInvoices extends Cluster
 {
@@ -12,4 +14,5 @@ class MyInvoices extends Cluster
     protected array $casts = [
         'inv_bill_to_st' => USState::class,
     ];
+
 }

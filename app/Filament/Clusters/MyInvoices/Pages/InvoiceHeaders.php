@@ -40,7 +40,7 @@ class InvoiceHeaders extends Page implements HasTable
 
     public function mount(): void
     {
-        // $this->invoice_headers = SoapInvoice::getSoapInvoices();
+        //
     }
 
     public function table(Table $table): Table
@@ -91,6 +91,6 @@ class InvoiceHeaders extends Page implements HasTable
     // If you need to manually refresh the data
     public function refreshData(): void
     {
-        $this->invoice_headers = SoapInvoice::getSoapInvoices();
+        // $this->invoice_headers = SoapInvoice::getSoapInvoices();
     }
 }

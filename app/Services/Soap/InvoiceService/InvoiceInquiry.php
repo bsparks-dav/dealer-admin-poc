@@ -59,7 +59,7 @@ class InvoiceInquiry
             'UserName' => $email,
             'UserPassword' => $password,
             'customerNo' => $cust_no,
-            'invoiceCutoffDate' => date('Y-m-d\TH:i:s', strtotime('2017-12-01')),
+            'invoiceCutoffDate' => date('Y-m-d\TH:i:s', strtotime('-2 years')),
             'orderBy' => 'Inv_Date desc',
         ];
 
@@ -82,6 +82,8 @@ class InvoiceInquiry
         $invoiceArray = [];
         $lineItems = [];
 
+        $invoiceArray['Notes'] = [];
+
         $invoiceData = $invoice[0];
 
         $invoiceData = (array) $invoiceData;
@@ -91,6 +93,8 @@ class InvoiceInquiry
         $headerData = $this->__trimConvert($invoiceData['InvoiceHeader']);
 
         $invoiceSerials = [];
+
+        $invoiceNotes = [];
 
         if (isset($invoiceData['InvoiceSerialNo'])) {
 
@@ -112,9 +116,30 @@ class InvoiceInquiry
             }
         }
 
-        $noteData = $this->__trimConvert((array) $invoiceData['Notes']);
+        $lineData['inv_itm_notes'] = [];
 
-        $headerData['inv_notes'] = $noteData;
+        if (isset($invoiceData['Notes'])) {
+
+            // $headerData['inv_notes'] = $this->__trimConvert((array) $invoiceData['Notes']);
+            $noteType = gettype($invoiceData['Notes']);
+
+            if ($noteType == 'array') {
+
+                foreach ($invoiceData['Notes'] as $noteItem) {
+                    $invoiceNotes[] = $this->__trimConvert((array) $noteItem);
+                }
+                $invoiceNotes = $this->__processArray($invoiceNotes);
+            }
+
+            if ($noteType == 'object') {
+
+                $invoiceNotes[] = (array) $invoiceData['Notes'];
+
+                $invoiceNotes = $this->__processArray($invoiceNotes);
+            }
+
+            $invoiceArray['Notes'] = $invoiceNotes;
+        }
 
         $invoiceArray['HeaderData'] = $headerData;
 
@@ -144,6 +169,17 @@ class InvoiceInquiry
                     if ($serialNoItem['inv_his_ls_item_no'] == $lineData['inv_itm_itm_no']) {
 
                         $lineData['inv_itm_serial_numbers'][] = $serialNoItem['inv_his_ls_s_l_alt_1'];
+                    }
+                }
+
+                $lineData['inv_itm_notes'] = [];
+
+                foreach ($invoiceNotes as $noteItem) {
+
+                    // business rule should not be here...
+                    if ($noteItem['note_create_by_user'] == 'STARSHIP') {
+
+                        $lineData['inv_itm_notes'][] = $noteItem;
                     }
                 }
 

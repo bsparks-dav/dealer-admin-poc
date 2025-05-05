@@ -5,7 +5,6 @@ namespace App\Filament\Auth;
 use App\Models\User;
 use App\Services\Api\CustomerService;
 use App\Services\Soap\EliecontService\LoginService;
-use App\Services\Soap\InvoiceService\InvoiceInquiry;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
@@ -21,6 +20,8 @@ class SoapLogin extends Login
     protected string $email = '';
 
     protected string $password = '';
+
+    protected ?\Illuminate\Contracts\Auth\Authenticatable $user = null;
 
     public function authenticate(): ?LoginResponse
     {
@@ -44,6 +45,8 @@ class SoapLogin extends Login
 
             $result = json_decode($response, true);
 
+            \Log::info('Login response ReturnCode: ', [$result['ReturnCode']]);
+
             if ($result['ReturnCode'] == 5) {
 
                 // "This email address is invalid"
@@ -53,7 +56,6 @@ class SoapLogin extends Login
             }
 
             if ($result['ReturnCode'] == 33) {
-                // $returnMsg = preg_replace('/\d+\^\d+\^/', '', $result['ReturnMsg']);
                 // "Your password is invalid."
                 throw ValidationException::withMessages([
                     'data.password' => __('filament-panels::pages/auth/login.messages.password'),
@@ -75,41 +77,61 @@ class SoapLogin extends Login
                     return null;
                 }
 
-                $id = $result['SYCONTCT_ID'];
-
                 $CustomerService = app(CustomerService::class);
-                // $result = $CustomerService->getTermsCodes();
 
                 $cust_no = $result['ContactRelationshipRecord']['ContactRelationshipRecord'][0]['SYCONREL_REF_ID'];
 
+                \Log::info('cust_no from SOAP response: ', [$cust_no]);
+
+                $ship_to_no = '';
+
+                // get customer ship_to for other web services...
+                if (strlen($cust_no) > 6) {
+                    $cust_no = substr($cust_no, 0, 6);
+                    $ship_to_no = substr($cust_no, 6);
+                }
+
+                session(['ship_to_no' => $ship_to_no]);
+
                 session(['soap_cust_no' => $cust_no]);
 
-                // so i can use globally...
                 $CustomerService->setCustomerNumber($cust_no);
 
                 $dealer_data = $CustomerService->getCustomer($cust_no);
-                // dd($dealer_data['Customer']);
-                $dealer_name = $dealer_data['Customer']['CUS_NAME'];
 
-                // create a user locally for session handling...
-                $user = User::firstOrCreate(
-                    ['email' => $data['email']],
-                    [
-                        'name' => $dealer_name ?? $dealer_data['Customer']['CUS_NAME'],
-                        'password' => bcrypt(Str::random(64)),  // placeholder since local DB password not used...
-                    ]
-                );
+                \Log::info('cus_name from dealer_data: ', [data_get($dealer_data, 'Customer.CUS_NAME')]);
+
+                if (isset($dealer_data['Customer']['CUS_NAME']) && $dealer_data['Customer']['CUS_NAME']) {
+
+                    $dealer_name = $dealer_data['Customer']['CUS_NAME'];
+
+                    // create a user locally for session handling...
+                    $this->user = User::firstOrCreate(
+                        ['email' => $data['email']],
+                        [
+                            'name' => $dealer_name,
+                            // 'password' => $data['password'],
+                            // 'password' => bcrypt($data['password']),
+                            // 'password' => bcrypt(Str::random(64)),  // placeholder since local DB password not used...
+                        ]
+                    );
+                    \Log::info('after firstOrCreate: '.print_r($this->user, true));
+                }
 
                 // cannot use this for external API or SOAP data...
                 // if (! Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
                 //    $this->throwFailureValidationException();
                 // }
+                \Log::info('user should be set here.'.print_r($this->user, true));
+                if (isset($this->user)) {
+                    Filament::auth()->login($this->user, $data['remember'] ?? false);
+                } else {
+                    $this->displayPersistentNotification('Could not create a Filament user with: '.print_r($this->user, true));
+                }
 
-                Filament::auth()->login($user, $data['remember'] ?? false);
-
-                if (
-                    ($user instanceof FilamentUser) &&
-                    (! $user->canAccessPanel(Filament::getCurrentPanel()))
+                if (isset($this->user) &&
+                ($this->user instanceof FilamentUser) &&
+                    (! $this->user->canAccessPanel(Filament::getCurrentPanel()))
                 ) {
                     Filament::auth()->logout();
 
@@ -119,7 +141,6 @@ class SoapLogin extends Login
                 session()->regenerate();
 
                 return app(LoginResponse::class);
-
             }
         } else {
             $this->displayPersistentNotification('We are unable to process your request. Please try again.');

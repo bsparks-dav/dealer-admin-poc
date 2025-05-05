@@ -18,9 +18,9 @@ class ViewMyInvoice extends ViewRecord
 
     public $invoiceDetails = null;
 
-    public $invoiceHeader = null;
+    // public $invoiceHeader = null;
 
-    public $invoiceItems = null;
+    // public $invoiceItems = null;
 
     public $headerData = null;
 
@@ -37,7 +37,6 @@ class ViewMyInvoice extends ViewRecord
         parent::mount($record);
 
         $this->invoiceDetails = SoapInvoice::getInvoiceDetail();
-        // dd($this->invoiceDetails);
     }
 
     public static function getInvoiceDetail(): array|\Illuminate\Support\Collection

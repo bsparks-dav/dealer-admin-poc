@@ -112,6 +112,36 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'sqlsrv2' => [
+            'driver' => 'sqlsrv',
+            // 'url' => env('DB_SQLSRV_URL', 'dav-sql-2.davidsonsinc.com'),
+            'host' => env('DB_SQLSRV_HOST', 'dav-sql-2'),
+            'port' => env('DB_SQLSRV_PORT', '1433'),
+            'database' => env('DB_SQLSRV_DATABASE', ''),
+            'username' => env('DB_SQLSRV_USERNAME', 'webdevs'),
+            'password' => env('DB_SQLSRV_PASSWORD', 'AfyOV7PaUNKg1PVt5FtC'),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => env('DB_ENCRYPT', 'no'),
+            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'true'),
+        ],
+
+        'sqlsrv4' => [
+            'driver' => 'sqlsrv',
+            // 'url' => env('DB_SQLSRV_URL', 'dav-sql-4.davidsonsinc.com'),
+            'host' => env('DB_SQLSRV_HOST', 'dav-sql-4'),
+            'port' => env('DB_SQLSRV_PORT', '1433'),
+            'database' => env('DB_SQLSRV_DATABASE', ''),
+            'username' => env('DB_SQLSRV_USERNAME', 'webdevs'),
+            'password' => env('DB_SQLSRV_PASSWORD', 'AfyOV7PaUNKg1PVt5FtC'),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => env('DB_ENCRYPT', 'no'),
+            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'true'),
+        ],
+
     ],
 
     /*
@@ -121,7 +151,7 @@ return [
     |
     | This table keeps track of all the migrations that have already run for
     | your application. Using this information, we can determine which of
-    | the migrations on disk haven't actually been run on the database.
+    | the migrations on disk haven't been run on the database.
     |
     */
 

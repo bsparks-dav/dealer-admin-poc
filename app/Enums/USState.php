@@ -121,16 +121,24 @@ enum USState: string implements HasLabel
         };
     }
 
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::NC => 'warning',
+            self::AZ => 'danger',
+        };
+    }
+
     public static function formatStateCode(?string $stateCode): string
     {
         if (empty($stateCode)) {
             return '';
-        }
-
-        try {
-            return self::from($stateCode)->getLabel();
-        } catch (\ValueError $e) {
-            return $stateCode;
+        } else {
+            try {
+                return self::from($stateCode)->getLabel();
+            } catch (\ValueError $e) {
+                return $stateCode;
+            }
         }
     }
 
